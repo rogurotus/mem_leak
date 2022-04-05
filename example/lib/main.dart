@@ -17,6 +17,7 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   String _platformVersion = 'Unknown';
+  int i = 0;
 
   @override
   void initState() {
@@ -46,6 +47,15 @@ class _MyAppState extends State<MyApp> {
     });
   }
 
+  Future<void> _makeCall() async {
+    await MemLeak.testLeak;
+    setState(() {
+      _platformVersion = '$i';
+    });
+    i+=1;
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -55,6 +65,11 @@ class _MyAppState extends State<MyApp> {
         ),
         body: Center(
           child: Text('Running on: $_platformVersion\n'),
+        ),
+        floatingActionButton: FloatingActionButton(
+        onPressed: _makeCall,
+        tooltip: 'Call',
+        child: Icon(Icons.phone),
         ),
       ),
     );

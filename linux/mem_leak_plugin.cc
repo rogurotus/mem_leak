@@ -5,6 +5,7 @@
 #include <sys/utsname.h>
 
 #include <cstring>
+#include <string>
 
 #define MEM_LEAK_PLUGIN(obj) \
   (G_TYPE_CHECK_INSTANCE_CAST((obj), mem_leak_plugin_get_type(), \
@@ -30,6 +31,13 @@ static void mem_leak_plugin_handle_method_call(
     g_autofree gchar *version = g_strdup_printf("Linux %s", uname_data.version);
     g_autoptr(FlValue) result = fl_value_new_string(version);
     response = FL_METHOD_RESPONSE(fl_method_success_response_new(result));
+  } else if(strcmp(method, "test") == 0) {
+    for(int i = 0; i<100000; ++i) {
+      printf("%i\n", i);
+      g_autoptr(FlValue) test = fl_value_new_map();
+      fl_value_set_string(test, "test", fl_value_new_string("test"));
+    }
+    response = FL_METHOD_RESPONSE(fl_method_success_response_new(nullptr));
   } else {
     response = FL_METHOD_RESPONSE(fl_method_not_implemented_response_new());
   }
